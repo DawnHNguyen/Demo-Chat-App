@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CoreEditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/height_core_editText</item>
+        <item name="android:background">@drawable/background_core_edittext</item>
+        <item name="android:paddingStart">@dimen/paddingHorizontal_core_editText</item>
+        <item name="android:paddingEnd">@dimen/paddingHorizontal_core_editText</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:layout_marginTop">@dimen/marginTop_core_inputField</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/textSize_core_editText</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+</resources>

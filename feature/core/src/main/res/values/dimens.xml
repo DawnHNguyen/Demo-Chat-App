@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_core_editText">45dp</dimen>
+    <dimen name="paddingHorizontal_core_parentView">30dp</dimen>
+    <dimen name="radius_core_editText_corners">22dp</dimen>
+    <dimen name="paddingHorizontal_core_editText">18dp</dimen>
+    <dimen name="marginTop_core_inputField">15dp</dimen>
+    <dimen name="textSize_core_editText">16sp</dimen>
+</resources>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/account_parentView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F2F2F2"
+            tools:context=".presentation.ui.account.AccountFragment">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineStart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/paddingHorizontal_core_parentView" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineEnd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="@dimen/paddingHorizontal_core_parentView" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editText_main_username"
+                style="@style/CoreEditText"
+                android:layout_marginTop="20dp"
+                android:drawableStart="@drawable/ic_hooman"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editText_main_password"
+                style="@style/CoreEditText"
+                android:drawableStart="@drawable/ic_password"
+                android:inputType="textPassword"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/editText_main_username" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_main_changePass"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_core_button_enable"
+                android:text="ĐỔI MẬT KHẨU"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/editText_main_password" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textView_main_userInfoField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Thông tin cá nhân"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/button_main_changePass" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageView_main_avatar"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/background_core_avatar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView_main_userInfoField" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/imageButton_main_updateAvatar"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:background="@drawable/background_core_avatar"
+                android:padding="6dp"
+                android:src="@drawable/ic_camera_yellow"
+                app:layout_constraintBottom_toBottomOf="@id/imageView_main_avatar"
+                app:layout_constraintEnd_toEndOf="@id/imageView_main_avatar" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editText_main_name"
+                style="@style/CoreEditText"
+                android:drawableStart="@drawable/ic_hooman"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/imageView_main_avatar" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editText_main_dob"
+                style="@style/CoreEditText"
+                android:drawableStart="@drawable/ic_dob"
+                android:editable="false"
+                android:focusable="false"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/editText_main_name" />
+
+            <View
+                android:id="@+id/view_main_gender"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/height_core_editText"
+                android:layout_marginTop="@dimen/marginTop_core_inputField"
+                android:background="@drawable/background_core_edittext"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/editText_main_dob" />
+
+            <ImageView
+                android:id="@+id/imageView_main_iconGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/paddingHorizontal_core_editText"
+                android:src="@drawable/ic_gender"
+                app:layout_constraintBottom_toBottomOf="@id/view_main_gender"
+                app:layout_constraintStart_toStartOf="@id/view_main_gender"
+                app:layout_constraintTop_toTopOf="@id/view_main_gender" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup_main_gender"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/view_main_gender"
+                app:layout_constraintEnd_toEndOf="@id/view_main_gender"
+                app:layout_constraintStart_toEndOf="@id/imageView_main_iconGender"
+                app:layout_constraintTop_toTopOf="@id/view_main_gender">
+
+                <RadioButton
+                    android:id="@+id/radioButton_main_male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="#4CAFBF"
+                    android:checked="false"
+                    android:text="Nam"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/radioButton_main_female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="#4CAFBF"
+                    android:checked="false"
+                    android:text="Nữ"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/radioButton_main_other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="#4CAFBF"
+                    android:checked="false"
+                    android:text="Khác"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RadioGroup>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editText_main_address"
+                style="@style/CoreEditText"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/height_core_editText"
+                android:drawableStart="@drawable/ic_home"
+                android:singleLine="false"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/view_main_gender" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_main_update"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/background_core_button"
+                android:enabled="false"
+                android:text="CẬP NHẬT"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/editText_main_address" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</layout>
