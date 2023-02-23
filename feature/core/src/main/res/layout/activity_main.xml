@@ -25,10 +25,16 @@
                 android:id="@+id/toolBar_mainActivity"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:contentInsetStartWithNavigation="0dp"
-                app:navigationIcon="@drawable/ic_nav_back_black"
-                app:title="Thiết lập tài khoản"
-                app:titleTextColor="@color/black" />
+                app:navigationIcon="@drawable/ic_nav_back_black">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thiết lập tài khoản"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center" />
+            </com.google.android.material.appbar.MaterialToolbar>
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
