@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_nav_home"
+        android:title="Trang chủ"/>
+
+    <item
+        android:id="@+id/nav_examination"
+        android:icon="@drawable/ic_nav_examination"
+        android:title="Khám bệnh" />
+
+    <item
+        android:id="@+id/nav_analysis"
+        android:icon="@drawable/ic_nav_analysis"
+        android:title="Xét nghiệm" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_nav_profile"
+        android:title="Hồ sơ" />
+
+    <item
+        android:id="@+id/nav_account"
+        android:icon="@drawable/ic_nav_account"
+        android:title="Tài khoản" />
+
+</menu>

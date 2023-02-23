@@ -46,19 +46,23 @@
             app:navGraph="@navigation/main_nav_graph"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topAppBar_mainActivity"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/bottomNav_activityMain_bottomNav"/>
 
-<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--            android:id="@+id/bottomNav_activityMain_bottomNav"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:labelVisibilityMode="labeled"-->
-<!--            app:itemBackground="@android:color/transparent"-->
-<!--            app:menu="@menu/bottom_nav_menu"-->
-<!--            app:itemIconTint="@color/white"-->
-<!--            app:itemTextColor="@color/white"/>-->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav_activityMain_bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:labelVisibilityMode="labeled"
+            android:background="@drawable/background_bottomnav"
+            app:itemBackground="@android:color/transparent"
+            app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
+            app:itemTextAppearanceInactive="@style/BottomNavigationView"
+            app:itemIconTint="@color/color_bottom_nav_label"
+            app:menu="@menu/bottom_nav_menu"
+            app:itemTextColor="@color/color_bottom_nav_label" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

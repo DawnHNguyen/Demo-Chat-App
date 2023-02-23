@@ -2,15 +2,30 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/accountFragment">
+    app:startDestination="@id/nav_account">
 
     <fragment
-        android:id="@+id/accountFragment"
+        android:id="@+id/nav_account"
         android:name="com.example.core.presentation.ui.account.AccountFragment"
-        android:label="AccountFragment" />
+        android:label="AccountFragment"/>
 
     <fragment
-        android:id="@+id/chatFragment"
+        android:id="@+id/nav_examination"
         android:name="com.example.core.presentation.ui.chat.ChatFragment"
-        android:label="ChatFragment" />
+        android:label="ChatFragment"/>
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.core.presentation.ui.home.HomeFragment"
+        android:label="HomeFragment"/>
+
+    <fragment
+        android:id="@+id/nav_analysis"
+        android:name="com.example.core.presentation.ui.analysis.AnalysisFragment"
+        android:label="AnalysisFragment"/>
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.core.presentation.ui.profile.ProfileFragment"
+        android:label="ProfileFragment"/>
 </navigation>

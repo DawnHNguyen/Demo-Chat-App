@@ -23,7 +23,7 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
 
         binding.chatParentView.setOnClickListener { hideKeyboard() }
 
-        binding.buttonChatSend.setOnClickListener {
+        binding.imageButtonChatSend.setOnClickListener {
             viewModel.sendMsg()
             hideKeyboard()
         }
