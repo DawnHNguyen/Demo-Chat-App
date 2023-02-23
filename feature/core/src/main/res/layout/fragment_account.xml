@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#F2F2F2"
-            tools:context=".presentation.ui.account.AccountFragment">
+            tools:context=".presentation.ui.account.AccountFragment"
+            android:paddingVertical="20dp">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineStart"
@@ -35,7 +36,6 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/editText_main_username"
                 style="@style/CoreEditText"
-                android:layout_marginTop="20dp"
                 android:drawableStart="@drawable/ic_hooman"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
@@ -61,6 +61,7 @@
                 android:text="ĐỔI MẬT KHẨU"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/editText_main_password" />
@@ -141,6 +142,7 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
                 android:orientation="horizontal"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="@id/view_main_gender"
                 app:layout_constraintEnd_toEndOf="@id/view_main_gender"
                 app:layout_constraintStart_toEndOf="@id/imageView_main_iconGender"
@@ -189,11 +191,21 @@
                 style="@style/CoreEditText"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/height_core_editText"
-                android:drawableStart="@drawable/ic_home"
                 android:singleLine="false"
+                android:paddingStart="54dp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/view_main_gender" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageView_main_iconAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home"
+                android:paddingHorizontal="18dp"
+                android:paddingTop="14dp"
+                app:layout_constraintStart_toStartOf="@id/editText_main_address"
+                app:layout_constraintTop_toTopOf="@id/editText_main_address"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_main_update"
@@ -205,10 +217,10 @@
                 android:text="CẬP NHẬT"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/editText_main_address" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
