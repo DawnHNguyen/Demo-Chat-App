@@ -69,6 +69,13 @@
             app:messageChat="@{viewModel.listMessage}" />
 
         <View
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:background="@drawable/shadow_bottom_nav"
+            android:layout_marginBottom="-15dp"
+            app:layout_constraintBottom_toTopOf="@id/view_chat_typeMessage"/>
+
+        <View
             android:id="@+id/view_chat_typeMessage"
             android:layout_width="match_parent"
             android:layout_height="0dp"

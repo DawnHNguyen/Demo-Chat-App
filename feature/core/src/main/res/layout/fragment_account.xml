@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:background="#F2F2F2"
             tools:context=".presentation.ui.account.AccountFragment"
-            android:paddingVertical="20dp">
+            android:paddingBottom="20dp">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineStart"
@@ -36,6 +36,7 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/editText_main_username"
                 style="@style/CoreEditText"
+                android:layout_marginTop="8dp"
                 android:drawableStart="@drawable/ic_hooman"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
