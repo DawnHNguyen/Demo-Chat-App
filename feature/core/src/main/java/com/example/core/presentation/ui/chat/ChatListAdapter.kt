@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.bumptech.glide.Glide
+import com.example.core.R
 import com.example.core.databinding.ItemMesssageReceiveBinding
 import com.example.core.databinding.ItemMesssageSendBinding
 import com.example.core.domain.entity.Message
 import com.example.core.domain.entity.MessageType
 
-class ChatListAdapter: ListAdapter<Message, ChatListAdapter.ChatListViewHolder>(ChatListDiffUtil()) {
+class ChatListAdapter(val avatarUrl: String = ""): ListAdapter<Message, ChatListAdapter.ChatListViewHolder>(ChatListDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
         return when (viewType) {
@@ -27,7 +29,7 @@ class ChatListAdapter: ListAdapter<Message, ChatListAdapter.ChatListViewHolder>(
             holder.bind(item)
         } else {
             val item = getItem(position)
-            (holder as MessageReceiveListViewHolder).bind(item)
+            (holder as MessageReceiveListViewHolder).bind(item, avatarUrl)
         }
     }
 
@@ -53,8 +55,16 @@ class ChatListAdapter: ListAdapter<Message, ChatListAdapter.ChatListViewHolder>(
 
     class MessageReceiveListViewHolder private constructor(private val binding: ItemMesssageReceiveBinding) :
         ChatListViewHolder(binding) {
-        fun bind(item: Message) {
+        fun bind(item: Message, avatarUrl: String) {
             binding.message = item.message
+            binding.imageViewMainAvatar.apply {
+                Glide
+                    .with(this.context)
+                    .load(avatarUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.avatar)
+                    .into(this)
+            }
             binding.executePendingBindings()
         }
 

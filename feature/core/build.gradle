@@ -71,6 +71,8 @@ dependencies {
     implementation AndroidLibraries.loggingIntercepter
 
     implementation AndroidLibraries.hawk
+
+    implementation AndroidLibraries.glide
 }
 
 // Allow references to generated code
