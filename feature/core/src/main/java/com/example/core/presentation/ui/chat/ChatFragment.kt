@@ -57,20 +57,28 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
 
         openCameraForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == Activity.RESULT_OK && it.data != null) Toast.makeText(
-                    requireContext(),
-                    "Photo has been taken and sent",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (it.resultCode == Activity.RESULT_OK && it.data != null) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Photo has been taken and sent",
+                        Toast.LENGTH_SHORT
+                    ).show()
+//                    viewModel.sendImg(it.data!!.data)
+                }
             }
 
         openGalleryForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == Activity.RESULT_OK && it.data != null) Toast.makeText(
-                    requireContext(),
-                    "Photo has been chosen and sent",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (it.resultCode == Activity.RESULT_OK && it.data != null) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Photo has been chosen and sent",
+                        Toast.LENGTH_SHORT
+                    ).show()
+//                    val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)
+
+                    viewModel.sendImg(it.data!!.data!!)
+                }
             }
         return super.onCreateView(inflater, container, savedInstanceState)
     }

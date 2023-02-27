@@ -1,6 +1,7 @@
 package com.example.core.presentation.ui.chat
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,10 +11,12 @@ import com.bumptech.glide.Glide
 import com.example.core.R
 import com.example.core.databinding.ItemMesssageReceiveBinding
 import com.example.core.databinding.ItemMesssageSendBinding
+import com.example.core.domain.entity.BaseMessage
 import com.example.core.domain.entity.Message
 import com.example.core.domain.entity.MessageType
 
-class ChatListAdapter(val avatarUrl: String = ""): ListAdapter<Message, ChatListAdapter.ChatListViewHolder>(ChatListDiffUtil()) {
+class ChatListAdapter(val avatarUrl: String = "") :
+    ListAdapter<BaseMessage, ChatListAdapter.ChatListViewHolder>(ChatListDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
         return when (viewType) {
@@ -34,13 +37,23 @@ class ChatListAdapter(val avatarUrl: String = ""): ListAdapter<Message, ChatList
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position).type == MessageType.Send) MessageType.Send.ordinal else MessageType.Receive.ordinal
+        return if (getItem(position).msgType == MessageType.Send) MessageType.Send.ordinal else MessageType.Receive.ordinal
     }
 
     class MessageSendListViewHolder private constructor(private val binding: ItemMesssageSendBinding) :
         ChatListViewHolder(binding) {
         fun bind(item: Message) {
             binding.message = item.message
+            if (item.image != null) binding.imageViewItemMessageSendImageVertical.apply {
+                Glide
+                    .with(this.context)
+                    .load(item.image)
+                    .into(this)
+                this.visibility = View.VISIBLE
+            }
+
+            binding.textViewItemMessageSendMessage.visibility = if (item.message.isEmpty()) View.GONE else View.VISIBLE
+
             binding.executePendingBindings()
         }
 
@@ -57,7 +70,17 @@ class ChatListAdapter(val avatarUrl: String = ""): ListAdapter<Message, ChatList
         ChatListViewHolder(binding) {
         fun bind(item: Message, avatarUrl: String) {
             binding.message = item.message
-            binding.imageViewMainAvatar.apply {
+            if (item.image != null) binding.imageViewItemMessageReceiveImage.apply {
+                Glide
+                    .with(this.context)
+                    .load(item.image)
+                    .centerCrop()
+                    .into(this)
+            }
+
+            binding.textViewItemMessageReceiveMessage.visibility = if (item.message.isEmpty()) View.GONE else View.VISIBLE
+
+            binding.imageViewItemMessageReceiveAvatar.apply {
                 Glide
                     .with(this.context)
                     .load(avatarUrl)

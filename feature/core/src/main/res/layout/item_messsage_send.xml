@@ -49,11 +49,16 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageView_itemMessageSend_image_vertical"
-            android:layout_width="155dp"
-            android:layout_height="274dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:maxHeight="274dp"
+            android:adjustViewBounds="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="@id/guideline_itemMessageSend"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
