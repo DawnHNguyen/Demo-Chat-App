@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,21 +93,23 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
             View.GONE
 
         binding.imageButtonChatNavBack.setOnClickListener {
-            changeTopAppBar()
             findNavController().popBackStack()
+            changeTopAppBar()
         }
 
         binding.imageButtonChatTakePhoto.setOnClickListener {
-            checkPermission{ takePhoto() }
+            checkPermission { takePhoto() }
         }
 
         binding.imageButtonChatGallery.setOnClickListener {
-            checkPermission{ openGallery() }
+            checkPermission { openGallery() }
         }
 
         binding.recyclerViewChat.apply {
             adapter = ChatListAdapter()
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(requireContext()).apply {
+                stackFromEnd = true
+            }
             itemAnimator = null
         }
     }
@@ -128,12 +131,12 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
         openCameraForResult.launch(cameraIntent)
     }
 
-    private fun openGallery(){
+    private fun openGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         openGalleryForResult.launch(galleryIntent)
     }
 
-    private fun checkPermission(onPermissionGranted:() -> Unit) {
+    private fun checkPermission(onPermissionGranted: () -> Unit) {
         when {
             isPermissionGranted() -> {
                 onPermissionGranted()
@@ -165,6 +168,7 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
     }
 
     companion object {
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
+        private val REQUIRED_PERMISSIONS =
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 }
