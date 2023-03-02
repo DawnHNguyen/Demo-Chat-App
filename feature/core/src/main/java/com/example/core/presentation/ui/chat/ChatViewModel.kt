@@ -1,8 +1,6 @@
 package com.example.core.presentation.ui.chat
 
-import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,37 +12,35 @@ import com.example.core.domain.entity.MessageType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ChatViewModel: ViewModel() {
+class ChatViewModel : ViewModel() {
 
     val chatMessage = MutableLiveData<String>()
 
     private val _listMessage = MutableLiveData<List<BaseMessage>>(listOf())
     val listMessage: LiveData<List<BaseMessage>> get() = _listMessage
 
-    fun sendMsg(){
-        if(!chatMessage.value.isNullOrEmpty()) {
+    fun sendMsg() {
+        if (!chatMessage.value.isNullOrEmpty()) {
             val temp = listMessage.value?.toMutableList()
-            temp?.add(Message(chatMessage.value!!, MessageType.Send))
+            temp?.add(Message(chatMessage.value!!).apply { getMsgType(MessageType.Send) })
             _listMessage.value = temp?.toList()
 
-            viewModelScope.launch{
+            viewModelScope.launch {
                 delay(1000)
                 temp?.add(
                     Message(
-                        "\"Xin chào bạn. Rất vui làm quen với bạn\"",
-                        MessageType.Receive
-                    )
+                        "\"Xin chào bạn. Rất vui làm quen với bạn\""
+                    ).apply { getMsgType(MessageType.Receive) }
                 )
-
                 _listMessage.value = temp?.toList()
             }
             chatMessage.value = ""
         }
     }
 
-    fun sendImg(img: Uri){
+    fun sendImg(img: String) {
         val temp = listMessage.value?.toMutableList()
-        temp?.add(ImageMessage("", MessageType.Send))
+        temp?.add(ImageMessage(img).apply { getMsgType(MessageType.SendImg) })
         _listMessage.value = temp?.toList()
     }
 

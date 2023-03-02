@@ -4,8 +4,11 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +29,9 @@ import com.example.core.R
 import com.example.core.databinding.FragmentChatBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.io.ByteArrayOutputStream
+import java.io.File
+
 
 class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewModel>() {
     override fun getLayoutId(): Int = R.layout.fragment_chat
@@ -58,26 +65,19 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
         openCameraForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Photo has been taken and sent",
-                        Toast.LENGTH_SHORT
-                    ).show()
-//                    viewModel.sendImg(it.data!!.data)
+                    val img = it.data?.extras?.get("data") as Bitmap
+
+                    val imgUri = getImageUri(img).toString()
+
+                    viewModel.sendImg(imgUri)
                 }
             }
 
         openGalleryForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Photo has been chosen and sent",
-                        Toast.LENGTH_SHORT
-                    ).show()
-//                    val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)
 
-                    viewModel.sendImg(it.data!!.data!!)
+                    viewModel.sendImg(it.data!!.data!!.toString())
                 }
             }
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -142,6 +142,18 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
     private fun openGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         openGalleryForResult.launch(galleryIntent)
+    }
+
+    private fun getImageUri(img: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        img.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path: String = MediaStore.Images.Media.insertImage(
+            requireContext().contentResolver,
+            img,
+            "Title",
+            null
+        )
+        return Uri.parse(path)
     }
 
     private fun checkPermission(onPermissionGranted: () -> Unit) {

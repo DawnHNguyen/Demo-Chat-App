@@ -93,6 +93,7 @@
             android:background="@drawable/background_chat_chatbox"
             android:gravity="center_vertical"
             android:hint="Tin nhắn"
+            android:maxLines="5"
             android:minHeight="30dp"
             android:paddingHorizontal="5dp"
             android:paddingVertical="8dp"
