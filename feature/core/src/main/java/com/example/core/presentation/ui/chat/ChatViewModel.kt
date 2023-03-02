@@ -1,6 +1,5 @@
 package com.example.core.presentation.ui.chat
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,7 +21,7 @@ class ChatViewModel : ViewModel() {
     fun sendMsg() {
         if (!chatMessage.value.isNullOrEmpty()) {
             val temp = listMessage.value?.toMutableList()
-            temp?.add(Message(chatMessage.value!!).apply { getMsgType(MessageType.Send) })
+            temp?.add(Message(chatMessage.value!!).apply { setMsgType(MessageType.Send) })
             _listMessage.value = temp?.toList()
 
             viewModelScope.launch {
@@ -30,7 +29,7 @@ class ChatViewModel : ViewModel() {
                 temp?.add(
                     Message(
                         "\"Xin chào bạn. Rất vui làm quen với bạn\""
-                    ).apply { getMsgType(MessageType.Receive) }
+                    ).apply { setMsgType(MessageType.Receive) }
                 )
                 _listMessage.value = temp?.toList()
             }
@@ -38,9 +37,10 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    fun sendImg(img: String) {
+    fun sendImg(img: List<String>) {
         val temp = listMessage.value?.toMutableList()
-        temp?.add(ImageMessage(img).apply { getMsgType(MessageType.SendImg) })
+        if (img.size > 1) temp?.add(ImageMessage(img).apply { setMsgType(MessageType.SendMultiImg) })
+        else temp?.add(ImageMessage(img).apply { setMsgType(MessageType.SendImg) })
         _listMessage.value = temp?.toList()
     }
 

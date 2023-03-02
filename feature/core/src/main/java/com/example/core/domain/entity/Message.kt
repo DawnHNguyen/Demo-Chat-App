@@ -2,7 +2,7 @@ package com.example.core.domain.entity
 
 sealed class BaseMessage{
     private var _msgType: MessageType = MessageType.Send
-    fun getMsgType(type: MessageType){
+    fun setMsgType(type: MessageType){
         _msgType = type
     }
 
@@ -13,9 +13,9 @@ data class Message(
 ): BaseMessage()
 
 data class ImageMessage(
-    val image: String
+    val image: List<String>
 ): BaseMessage()
 
 enum class MessageType {
-    Receive, Send, ReceiveImg, SendImg
+    Receive, Send, ReceiveImg, SendImg, ReceiveMultiImg, SendMultiImg
 }

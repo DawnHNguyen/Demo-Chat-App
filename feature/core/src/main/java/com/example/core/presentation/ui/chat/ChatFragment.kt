@@ -2,23 +2,22 @@ package com.example.core.presentation.ui.chat
 
 import android.Manifest
 import android.app.Activity
+import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +29,6 @@ import com.example.core.databinding.FragmentChatBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.ByteArrayOutputStream
-import java.io.File
 
 
 class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewModel>() {
@@ -69,15 +67,23 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
 
                     val imgUri = getImageUri(img).toString()
 
-                    viewModel.sendImg(imgUri)
+                    viewModel.sendImg(listOf(imgUri))
                 }
             }
 
         openGalleryForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-
-                    viewModel.sendImg(it.data!!.data!!.toString())
+                    if (it.data!!.clipData != null){
+                        val listImage = mutableListOf<String>()
+                        val clipData = it.data!!.clipData!!
+                        val count = clipData.itemCount
+                        for (i in 0 until count) {
+                            listImage.add(clipData.getItemAt(i).uri.toString())
+                        }
+                        viewModel.sendImg(listImage.toList())
+                    }
+                    else viewModel.sendImg(listOf(it.data!!.data!!.toString()))
                 }
             }
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -140,7 +146,14 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
     }
 
     private fun openGallery() {
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+//        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        val galleryIntent = Intent()
+
+        galleryIntent.type = "image/*"
+
+        galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        galleryIntent.action = Intent.ACTION_GET_CONTENT
+
         openGalleryForResult.launch(galleryIntent)
     }
 

@@ -1,17 +1,18 @@
 package com.example.core.presentation.ui.chat
 
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
+import com.example.common.presentation.utils.MarginItemDecoration
 import com.example.core.R
-import com.example.core.databinding.ItemImageMesssageReceiveBinding
-import com.example.core.databinding.ItemImageMesssageSendBinding
-import com.example.core.databinding.ItemMesssageReceiveBinding
-import com.example.core.databinding.ItemMesssageSendBinding
+import com.example.core.databinding.*
 import com.example.core.domain.entity.BaseMessage
 import com.example.core.domain.entity.ImageMessage
 import com.example.core.domain.entity.Message
@@ -26,6 +27,10 @@ class ChatListAdapter(val avatarUrl: String = "") :
             MessageType.Receive.ordinal -> MessageReceiveListViewHolder.from(parent)
             MessageType.SendImg.ordinal -> ImageMessageSendListViewHolder.from(parent)
             MessageType.ReceiveImg.ordinal -> ImageMessageReceiveListViewHolder.from(parent)
+            MessageType.SendMultiImg.ordinal -> MultiImageMessageSendListViewHolder.from(parent)
+            MessageType.ReceiveMultiImg.ordinal -> MultiImageMessageReceiveListViewHolder.from(
+                parent
+            )
             else -> MessageReceiveListViewHolder.from(parent)
         }
     }
@@ -48,6 +53,14 @@ class ChatListAdapter(val avatarUrl: String = "") :
             is ImageMessageReceiveListViewHolder -> {
                 holder.bind(item as ImageMessage, avatarUrl)
             }
+
+            is MultiImageMessageSendListViewHolder -> {
+                holder.bind(item as ImageMessage)
+            }
+
+            is MultiImageMessageReceiveListViewHolder -> {
+                holder.bind(item as ImageMessage, avatarUrl)
+            }
         }
     }
 
@@ -57,6 +70,8 @@ class ChatListAdapter(val avatarUrl: String = "") :
             MessageType.Receive -> MessageType.Receive.ordinal
             MessageType.SendImg -> MessageType.SendImg.ordinal
             MessageType.ReceiveImg -> MessageType.ReceiveImg.ordinal
+            MessageType.ReceiveMultiImg -> MessageType.ReceiveMultiImg.ordinal
+            MessageType.SendMultiImg -> MessageType.SendMultiImg.ordinal
         }
     }
 
@@ -107,7 +122,7 @@ class ChatListAdapter(val avatarUrl: String = "") :
             binding.imageViewItemImageMessageSendImage.apply {
                 Glide
                     .with(this.context)
-                    .load(item.image)
+                    .load(item.image[0])
                     .into(this)
             }
             binding.executePendingBindings()
@@ -128,7 +143,7 @@ class ChatListAdapter(val avatarUrl: String = "") :
             binding.imageViewItemImageMessageReceiveImage.apply {
                 Glide
                     .with(this.context)
-                    .load(item.image)
+                    .load(item.image[0])
                     .centerCrop()
                     .into(this)
             }
@@ -150,6 +165,103 @@ class ChatListAdapter(val avatarUrl: String = "") :
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = ItemImageMesssageReceiveBinding.inflate(layoutInflater, parent, false)
                 return ImageMessageReceiveListViewHolder(binding)
+            }
+        }
+    }
+
+    class MultiImageMessageSendListViewHolder private constructor(private val binding: ItemMultiImageMesssageSendBinding) :
+        ChatListViewHolder(binding) {
+        fun bind(item: ImageMessage) {
+            binding.recyclerViewMultiImageMessageSend.apply {
+                adapter = ChatImageListAdapter()
+                if (item.image.size == 2) {
+                    layoutManager = GridLayoutManager(this.context, 2)
+                    addItemDecoration(
+                        MarginItemDecoration(
+                            2 * this.context.resources.displayMetrics.density.toInt(),
+                            2
+                        )
+                    )
+                } else {
+                    layoutManager = GridLayoutManager(this.context, 3)
+                    addItemDecoration(
+                        MarginItemDecoration(
+                            2 * this.context.resources.displayMetrics.density.toInt(),
+                            3
+                        )
+                    )
+                }
+                (adapter as? ListAdapter<String, *>)?.submitList(item.image)
+            }
+            binding.executePendingBindings()
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): MultiImageMessageSendListViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding =
+                    ItemMultiImageMesssageSendBinding.inflate(layoutInflater, parent, false)
+                return MultiImageMessageSendListViewHolder(binding)
+            }
+        }
+    }
+
+    class MultiImageMessageReceiveListViewHolder private constructor(private val binding: ItemMultiImageMesssageReceiveBinding) :
+        ChatListViewHolder(binding) {
+        fun bind(item: ImageMessage, avatarUrl: String) {
+            binding.recyclerViewMultiImageMessageReceive.apply {
+                adapter = ChatImageListAdapter()
+                if (item.image.size == 2) {
+                    layoutManager = GridLayoutManager(this.context, 2)
+                    addItemDecoration(
+                        MarginItemDecoration(
+                            2 * this.context.resources.displayMetrics.density.toInt(),
+                            2
+                        )
+                    )
+                } else {
+                    layoutManager = GridLayoutManager(this.context, 3)
+                    addItemDecoration(
+                        MarginItemDecoration(
+                            2 * this.context.resources.displayMetrics.density.toInt(),
+                            3
+                        )
+                    )
+                }
+                (adapter as? ListAdapter<String, *>)?.submitList(item.image)
+
+                val radius = 8 * this.context.resources.displayMetrics.density
+
+                draw(Canvas().apply {
+                    drawRoundRect(
+                        0f,
+                        0f,
+                        this.width.toFloat(),
+                        this.height.toFloat(),
+                        radius,
+                        radius,
+                        Paint()
+                    )
+                })
+            }
+
+            binding.imageViewItemMultiImageMessageReceiveAvatar.apply {
+                Glide
+                    .with(this.context)
+                    .load(avatarUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.avatar)
+                    .into(this)
+            }
+            binding.executePendingBindings()
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): MultiImageMessageReceiveListViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding =
+                    ItemMultiImageMesssageReceiveBinding.inflate(layoutInflater, parent, false)
+                return MultiImageMessageReceiveListViewHolder(binding)
             }
         }
     }
