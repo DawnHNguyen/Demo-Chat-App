@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="8dp"
             app:cardBackgroundColor="#F2F2F2"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline_itemMultiImageMessageSend"
             app:layout_constraintTop_toTopOf="parent">

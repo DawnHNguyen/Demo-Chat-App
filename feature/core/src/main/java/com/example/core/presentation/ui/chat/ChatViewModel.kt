@@ -25,7 +25,7 @@ class ChatViewModel : ViewModel() {
             _listMessage.value = temp?.toList()
 
             viewModelScope.launch {
-                delay(1000)
+                delay(200)
                 temp?.add(
                     Message(
                         "\"Xin chào bạn. Rất vui làm quen với bạn\""

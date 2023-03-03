@@ -2,7 +2,6 @@ package com.example.core.presentation.ui.chat
 
 import android.Manifest
 import android.app.Activity
-import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,11 +13,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.common.presentation.BaseFragmentWithViewModel
@@ -28,6 +27,8 @@ import com.example.core.R
 import com.example.core.databinding.FragmentChatBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
 
@@ -74,7 +75,7 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
         openGalleryForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                    if (it.data!!.clipData != null){
+                    if (it.data!!.clipData != null) {
                         val listImage = mutableListOf<String>()
                         val clipData = it.data!!.clipData!!
                         val count = clipData.itemCount
@@ -82,8 +83,7 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
                             listImage.add(clipData.getItemAt(i).uri.toString())
                         }
                         viewModel.sendImg(listImage.toList())
-                    }
-                    else viewModel.sendImg(listOf(it.data!!.data!!.toString()))
+                    } else viewModel.sendImg(listOf(it.data!!.data!!.toString()))
                 }
             }
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -93,6 +93,15 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
         super.onViewCreated(view, savedInstanceState)
 
         binding.chatParentView.setOnClickListener { hideKeyboard() }
+
+        viewModel.listMessage.observe(viewLifecycleOwner) {
+            lifecycleScope.launch{
+                delay(500)
+                if (it.isNotEmpty()) {
+                    binding.recyclerViewChat.smoothScrollToPosition(it.size)
+                }
+            }
+        }
 
         binding.imageButtonChatSend.setOnClickListener {
             viewModel.sendMsg()

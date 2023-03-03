@@ -7,22 +7,17 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.example.core.R
-import com.example.core.databinding.ItemImageMessageMoreThanTwoBinding
+import com.example.core.databinding.ItemImageMessageOverTwoBinding
 import com.example.core.databinding.ItemImageMessageTwoBinding
-import com.example.core.databinding.ItemImageMesssageReceiveBinding
-import com.example.core.databinding.ItemImageMesssageSendBinding
-import com.example.core.domain.entity.ImageMessage
-import com.example.core.domain.entity.Message
-import com.example.core.domain.entity.MessageType
 
 class ChatImageListAdapter :
     ListAdapter<String, ChatImageListAdapter.ChatImageListViewHolder>(ChatImageListDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatImageListViewHolder {
         return when (viewType) {
-            2 -> TwoImageListViewHolder.from(parent)
-            else -> MoreThanTwoImageListViewHolder.from(parent)
+            MultiImageType.Two.ordinal -> TwoImageListViewHolder.from(parent)
+            MultiImageType.OverTwo.ordinal -> OverTwoImageListViewHolder.from(parent)
+            else -> OverTwoImageListViewHolder.from(parent)
         }
     }
 
@@ -33,14 +28,14 @@ class ChatImageListAdapter :
                 holder.bind(item)
             }
 
-            is MoreThanTwoImageListViewHolder -> {
+            is OverTwoImageListViewHolder -> {
                 holder.bind(item)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return itemCount
+        return if (itemCount == 2) MultiImageType.Two.ordinal else MultiImageType.OverTwo.ordinal
     }
 
     class TwoImageListViewHolder private constructor(private val binding: ItemImageMessageTwoBinding) :
@@ -64,7 +59,7 @@ class ChatImageListAdapter :
         }
     }
 
-    class MoreThanTwoImageListViewHolder private constructor(private val binding: ItemImageMessageMoreThanTwoBinding) :
+    class OverTwoImageListViewHolder private constructor(private val binding: ItemImageMessageOverTwoBinding) :
         ChatImageListViewHolder(binding) {
         fun bind(item: String) {
             binding.imageItemImageMessageMoreThanTwoImage.apply {
@@ -77,10 +72,10 @@ class ChatImageListAdapter :
         }
 
         companion object {
-            fun from(parent: ViewGroup): MoreThanTwoImageListViewHolder {
+            fun from(parent: ViewGroup): OverTwoImageListViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemImageMessageMoreThanTwoBinding.inflate(layoutInflater, parent, false)
-                return MoreThanTwoImageListViewHolder(binding)
+                val binding = ItemImageMessageOverTwoBinding.inflate(layoutInflater, parent, false)
+                return OverTwoImageListViewHolder(binding)
             }
         }
     }
@@ -94,6 +89,10 @@ class ChatImageListAdapter :
 
         override fun areItemsTheSame(oldItem: String, newItem: String) =
             oldItem.hashCode() == newItem.hashCode()
+    }
+
+    enum class MultiImageType {
+        Two, OverTwo
     }
 
 }
