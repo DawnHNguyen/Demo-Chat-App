@@ -4,6 +4,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -23,15 +25,13 @@ class ChatListAdapter(val avatarUrl: String = "") :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
         return when (viewType) {
-            MessageType.Send.ordinal -> MessageSendListViewHolder.from(parent)
-            MessageType.Receive.ordinal -> MessageReceiveListViewHolder.from(parent)
-            MessageType.SendImg.ordinal -> ImageMessageSendListViewHolder.from(parent)
-            MessageType.ReceiveImg.ordinal -> ImageMessageReceiveListViewHolder.from(parent)
-            MessageType.SendMultiImg.ordinal -> MultiImageMessageSendListViewHolder.from(parent)
-            MessageType.ReceiveMultiImg.ordinal -> MultiImageMessageReceiveListViewHolder.from(
-                parent
-            )
-            else -> MessageReceiveListViewHolder.from(parent)
+            MessageType.Send.ordinal -> MessageSendListViewHolder(ChatListViewHolder.from(parent, R.layout.item_messsage_send))
+            MessageType.Receive.ordinal -> MessageReceiveListViewHolder(ChatListViewHolder.from(parent, R.layout.item_messsage_receive))
+            MessageType.SendImg.ordinal -> ImageMessageSendListViewHolder(ChatListViewHolder.from(parent, R.layout.item_image_messsage_send))
+            MessageType.ReceiveImg.ordinal -> ImageMessageReceiveListViewHolder(ChatListViewHolder.from(parent, R.layout.item_image_messsage_receive))
+            MessageType.SendMultiImg.ordinal -> MultiImageMessageSendListViewHolder(ChatListViewHolder.from(parent, R.layout.item_multi_image_messsage_send))
+            MessageType.ReceiveMultiImg.ordinal -> MultiImageMessageReceiveListViewHolder(ChatListViewHolder.from(parent, R.layout.item_multi_image_messsage_receive))
+            else -> MessageReceiveListViewHolder(ChatListViewHolder.from(parent, R.layout.item_messsage_receive))
         }
     }
 
@@ -75,23 +75,15 @@ class ChatListAdapter(val avatarUrl: String = "") :
         }
     }
 
-    class MessageSendListViewHolder private constructor(private val binding: ItemMesssageSendBinding) :
+    class MessageSendListViewHolder (private val binding: ItemMesssageSendBinding) :
         ChatListViewHolder(binding) {
         fun bind(item: Message) {
             binding.message = item.message
             binding.executePendingBindings()
         }
-
-        companion object {
-            fun from(parent: ViewGroup): MessageSendListViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemMesssageSendBinding.inflate(layoutInflater, parent, false)
-                return MessageSendListViewHolder(binding)
-            }
-        }
     }
 
-    class MessageReceiveListViewHolder private constructor(private val binding: ItemMesssageReceiveBinding) :
+    class MessageReceiveListViewHolder (private val binding: ItemMesssageReceiveBinding) :
         ChatListViewHolder(binding) {
         fun bind(item: Message, avatarUrl: String) {
             binding.message = item.message
@@ -106,17 +98,9 @@ class ChatListAdapter(val avatarUrl: String = "") :
             }
             binding.executePendingBindings()
         }
-
-        companion object {
-            fun from(parent: ViewGroup): MessageReceiveListViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemMesssageReceiveBinding.inflate(layoutInflater, parent, false)
-                return MessageReceiveListViewHolder(binding)
-            }
-        }
     }
 
-    class ImageMessageSendListViewHolder private constructor(private val binding: ItemImageMesssageSendBinding) :
+    class ImageMessageSendListViewHolder (private val binding: ItemImageMesssageSendBinding) :
         ChatListViewHolder(binding) {
         fun bind(item: ImageMessage) {
             binding.imageViewItemImageMessageSendImage.apply {
@@ -127,17 +111,9 @@ class ChatListAdapter(val avatarUrl: String = "") :
             }
             binding.executePendingBindings()
         }
-
-        companion object {
-            fun from(parent: ViewGroup): ImageMessageSendListViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemImageMesssageSendBinding.inflate(layoutInflater, parent, false)
-                return ImageMessageSendListViewHolder(binding)
-            }
-        }
     }
 
-    class ImageMessageReceiveListViewHolder private constructor(private val binding: ItemImageMesssageReceiveBinding) :
+    class ImageMessageReceiveListViewHolder (private val binding: ItemImageMesssageReceiveBinding) :
         ChatListViewHolder(binding) {
         fun bind(item: ImageMessage, avatarUrl: String) {
             binding.imageViewItemImageMessageReceiveImage.apply {
@@ -159,17 +135,9 @@ class ChatListAdapter(val avatarUrl: String = "") :
             }
             binding.executePendingBindings()
         }
-
-        companion object {
-            fun from(parent: ViewGroup): ImageMessageReceiveListViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemImageMesssageReceiveBinding.inflate(layoutInflater, parent, false)
-                return ImageMessageReceiveListViewHolder(binding)
-            }
-        }
     }
 
-    class MultiImageMessageSendListViewHolder private constructor(private val binding: ItemMultiImageMesssageSendBinding) :
+    class MultiImageMessageSendListViewHolder (private val binding: ItemMultiImageMesssageSendBinding) :
         ChatListViewHolder(binding) {
         fun bind(item: ImageMessage) {
             binding.recyclerViewMultiImageMessageSend.apply {
@@ -195,18 +163,9 @@ class ChatListAdapter(val avatarUrl: String = "") :
             }
             binding.executePendingBindings()
         }
-
-        companion object {
-            fun from(parent: ViewGroup): MultiImageMessageSendListViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding =
-                    ItemMultiImageMesssageSendBinding.inflate(layoutInflater, parent, false)
-                return MultiImageMessageSendListViewHolder(binding)
-            }
-        }
     }
 
-    class MultiImageMessageReceiveListViewHolder private constructor(private val binding: ItemMultiImageMesssageReceiveBinding) :
+    class MultiImageMessageReceiveListViewHolder (private val binding: ItemMultiImageMesssageReceiveBinding) :
         ChatListViewHolder(binding) {
         fun bind(item: ImageMessage, avatarUrl: String) {
             binding.recyclerViewMultiImageMessageReceive.apply {
@@ -255,18 +214,16 @@ class ChatListAdapter(val avatarUrl: String = "") :
             }
             binding.executePendingBindings()
         }
+    }
 
+    sealed class ChatListViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root){
         companion object {
-            fun from(parent: ViewGroup): MultiImageMessageReceiveListViewHolder {
+            inline fun <reified DB: ViewDataBinding> from(parent: ViewGroup, layoutId: Int): DB {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding =
-                    ItemMultiImageMesssageReceiveBinding.inflate(layoutInflater, parent, false)
-                return MultiImageMessageReceiveListViewHolder(binding)
+                return DataBindingUtil.inflate(layoutInflater, layoutId, parent, false) as DB
             }
         }
     }
-
-    sealed class ChatListViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     class ChatListDiffUtil : DiffUtil.ItemCallback<BaseMessage>() {
         override fun areContentsTheSame(oldItem: BaseMessage, newItem: BaseMessage) =
