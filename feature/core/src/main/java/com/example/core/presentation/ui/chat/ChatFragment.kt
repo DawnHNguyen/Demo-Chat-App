@@ -2,6 +2,7 @@ package com.example.core.presentation.ui.chat
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,17 +17,22 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.common.presentation.BaseFragmentWithViewModel
+import com.example.common.presentation.utils.MarginItemDecorationGridLayout
 import com.example.common.utils.hideKeyboard
 import com.example.core.BR
 import com.example.core.R
+import com.example.core.databinding.BottomSheetGalleryImageBinding
 import com.example.core.databinding.FragmentChatBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -65,7 +71,6 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                     val img = it.data?.extras?.get("data") as Bitmap
-
                     val imgUri = getImageUri(img).toString()
 
                     viewModel.sendImg(listOf(imgUri))
@@ -95,7 +100,7 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
         binding.chatParentView.setOnClickListener { hideKeyboard() }
 
         viewModel.listMessage.observe(viewLifecycleOwner) {
-            lifecycleScope.launch{
+            lifecycleScope.launch {
                 delay(500)
                 if (it.isNotEmpty()) {
                     binding.recyclerViewChat.smoothScrollToPosition(it.size)
@@ -125,7 +130,7 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
         }
 
         binding.imageButtonChatGallery.setOnClickListener {
-            checkPermission { openGallery() }
+            checkPermission { showBottomSheetGallery() }
         }
 
         binding.recyclerViewChat.apply {
@@ -154,16 +159,76 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
         openCameraForResult.launch(cameraIntent)
     }
 
-    private fun openGallery() {
-//        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        val galleryIntent = Intent()
+//    private fun openGallery() {
+////        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+//        val galleryIntent = Intent()
+//
+//        galleryIntent.type = "image/*"
+//
+//        galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//        galleryIntent.action = Intent.ACTION_GET_CONTENT
+//
+//        openGalleryForResult.launch(galleryIntent)
+//    }
 
-        galleryIntent.type = "image/*"
+    private fun showBottomSheetGallery() {
+        val bottomSheet = BottomSheetDialog(requireContext())
+        val bottomSheetBinding: BottomSheetGalleryImageBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.bottom_sheet_gallery_image,
+            null,
+            false
+        )
+        bottomSheet.setContentView(bottomSheetBinding.root)
 
-        galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        galleryIntent.action = Intent.ACTION_GET_CONTENT
+        bottomSheet.show()
 
-        openGalleryForResult.launch(galleryIntent)
+        bottomSheet.behavior.peekHeight = requireContext().resources.displayMetrics.heightPixels / 3
+
+        bottomSheetBinding.viewModel = viewModel
+
+        bottomSheetBinding.recyclerViewGalleryImage.apply {
+            adapter = GalleryImageListAdapter(object : OnClickGalleryImageRecyclerView {
+                override fun onClickGalleryImage(position: Int) {
+                    viewModel.onClickGalleryImage(position)
+                }
+            })
+            layoutManager = GridLayoutManager(requireContext(), 3)
+            addItemDecoration(
+                MarginItemDecorationGridLayout(
+                    1 * requireContext().resources.displayMetrics.density.toInt(),
+                    3
+                )
+            )
+        }
+        viewModel.initListGalleryImageUIModel(getAllGalleryImage())
+    }
+
+    private fun getAllGalleryImage(): List<String> {
+
+        val listImageURI = mutableListOf<String>()
+
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+        val selection: String? = null
+        val selectionArgs: Array<String>? = null
+
+        requireContext().contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder
+        )?.use { cursor ->
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                val imageUri =
+                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                listImageURI.add(imageUri.toString())
+            }
+        }
+
+        return listImageURI
     }
 
     private fun getImageUri(img: Bitmap): Uri? {

@@ -12,3 +12,10 @@ fun messageChat(recyclerView: RecyclerView?, listMessage: List<BaseMessage>?) {
         (recyclerView.adapter as? ListAdapter<BaseMessage, *>)?.submitList(listMessage)
     }
 }
+
+@BindingAdapter("app:galleryImage")
+fun galleryImage(recyclerView: RecyclerView?, galleryImageUIModel: List<GalleryImageUIModel>?){
+    if (recyclerView?.adapter != null && galleryImageUIModel != null) {
+        (recyclerView.adapter as? ListAdapter<GalleryImageUIModel, *>)?.submitList(galleryImageUIModel)
+    }
+}

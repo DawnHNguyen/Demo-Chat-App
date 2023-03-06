@@ -1,7 +1,5 @@
 package com.example.core.presentation.ui.chat
 
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -12,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.example.common.presentation.utils.MarginItemDecoration
+import com.example.common.presentation.utils.MarginItemDecorationGridLayout
 import com.example.core.R
 import com.example.core.databinding.*
 import com.example.core.domain.entity.BaseMessage
@@ -145,7 +143,7 @@ class ChatListAdapter(val avatarUrl: String = "") :
                 if (item.image.size == 2) {
                     layoutManager = GridLayoutManager(this.context, 2)
                     addItemDecoration(
-                        MarginItemDecoration(
+                        MarginItemDecorationGridLayout(
                             2 * this.context.resources.displayMetrics.density.toInt(),
                             2
                         )
@@ -153,7 +151,7 @@ class ChatListAdapter(val avatarUrl: String = "") :
                 } else {
                     layoutManager = GridLayoutManager(this.context, 3)
                     addItemDecoration(
-                        MarginItemDecoration(
+                        MarginItemDecorationGridLayout(
                             2 * this.context.resources.displayMetrics.density.toInt(),
                             3
                         )
@@ -173,7 +171,7 @@ class ChatListAdapter(val avatarUrl: String = "") :
                 if (item.image.size == 2) {
                     layoutManager = GridLayoutManager(this.context, 2)
                     addItemDecoration(
-                        MarginItemDecoration(
+                        MarginItemDecorationGridLayout(
                             2 * this.context.resources.displayMetrics.density.toInt(),
                             2
                         )
@@ -181,27 +179,13 @@ class ChatListAdapter(val avatarUrl: String = "") :
                 } else {
                     layoutManager = GridLayoutManager(this.context, 3)
                     addItemDecoration(
-                        MarginItemDecoration(
+                        MarginItemDecorationGridLayout(
                             2 * this.context.resources.displayMetrics.density.toInt(),
                             3
                         )
                     )
                 }
                 (adapter as? ListAdapter<String, *>)?.submitList(item.image)
-
-                val radius = 8 * this.context.resources.displayMetrics.density
-
-                draw(Canvas().apply {
-                    drawRoundRect(
-                        0f,
-                        0f,
-                        this.width.toFloat(),
-                        this.height.toFloat(),
-                        radius,
-                        radius,
-                        Paint()
-                    )
-                })
             }
 
             binding.imageViewItemMultiImageMessageReceiveAvatar.apply {

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MarginItemDecoration(
+class MarginItemDecorationGridLayout(
     private val spaceSize: Int,
     private val spanCount: Int = 1,
     private val orientation: Int = GridLayoutManager.VERTICAL
