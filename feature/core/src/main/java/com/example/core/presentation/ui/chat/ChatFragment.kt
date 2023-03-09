@@ -10,14 +10,16 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,14 +27,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.common.presentation.BaseFragmentWithViewModel
 import com.example.common.presentation.utils.MarginItemDecorationGridLayout
+import com.example.common.utils.dpToPx
 import com.example.common.utils.hideKeyboard
 import com.example.core.BR
 import com.example.core.R
-import com.example.core.databinding.BottomSheetGalleryImageBinding
 import com.example.core.databinding.FragmentChatBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -50,6 +52,8 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
     private lateinit var openCameraForResult: ActivityResultLauncher<Intent>
 
     private lateinit var openGalleryForResult: ActivityResultLauncher<Intent>
+
+    private lateinit var bottomSheetGalleryBehavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,6 +103,13 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
 
         binding.chatParentView.setOnClickListener { hideKeyboard() }
 
+        bottomSheetGalleryBehavior =
+            BottomSheetBehavior.from(binding.bottomSheetGalleryImage.parentViewBottomSheetGalleryImage)
+
+        bottomSheetGalleryBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        setupBottomSheetGallery()
+
         viewModel.listMessage.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 delay(500)
@@ -133,6 +144,23 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
             checkPermission { showBottomSheetGallery() }
         }
 
+        viewModel.selectedGalleryImage.observe(viewLifecycleOwner){
+            Log.d("Chat", "outIf")
+//            if (bottomSheetGalleryBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if (it.isNotEmpty()) {
+                    Log.d("Chat", "inIf")
+                    binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.text = it.size.toString()
+                    binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.visibility = View.VISIBLE
+                    binding.bottomSheetGalleryImage.imageButtonBottomSheetImageGalleryExpanseSend.isEnabled = true
+                }
+                else {
+                    Log.d("Chat", "inElse")
+                    binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.visibility = View.GONE
+                    binding.bottomSheetGalleryImage.imageButtonBottomSheetImageGalleryExpanseSend.isEnabled = false
+                }
+//            }
+        }
+
         binding.recyclerViewChat.apply {
             adapter = ChatListAdapter()
             layoutManager = LinearLayoutManager(requireContext()).apply {
@@ -159,31 +187,33 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
         openCameraForResult.launch(cameraIntent)
     }
 
-//    private fun openGallery() {
-////        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-//        val galleryIntent = Intent()
-//
-//        galleryIntent.type = "image/*"
-//
-//        galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-//        galleryIntent.action = Intent.ACTION_GET_CONTENT
-//
-//        openGalleryForResult.launch(galleryIntent)
-//    }
+    private fun setupBottomSheetGallery() {
+        val bottomSheetBinding = binding.bottomSheetGalleryImage
 
-    private fun showBottomSheetGallery() {
-        val bottomSheet = BottomSheetDialog(requireContext())
-        val bottomSheetBinding: BottomSheetGalleryImageBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.bottom_sheet_gallery_image,
-            null,
-            false
-        )
-        bottomSheet.setContentView(bottomSheetBinding.root)
+        val heightChatBox = binding.bottomSheetGalleryImage.viewBottomSheetImageGallerySendBox.layoutParams.height
 
-        bottomSheet.show()
+        bottomSheetGalleryBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+            }
 
-        bottomSheet.behavior.peekHeight = requireContext().resources.displayMetrics.heightPixels / 3
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                val slideOff = if (slideOffset < 0) 0f else slideOffset
+                val paramChatBox = binding.bottomSheetGalleryImage.viewBottomSheetImageGallerySendBox.layoutParams
+                paramChatBox.height = (heightChatBox * (1 - slideOff)).toInt().inc()
+                binding.bottomSheetGalleryImage.viewBottomSheetImageGallerySendBox.layoutParams = paramChatBox
+
+                if (slideOff == 1f) {
+                    binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryShadow.visibility = View.GONE
+                    binding.bottomSheetGalleryImage.groupBottomSheetImageGalleryExpanseSendBox.visibility = View.VISIBLE
+                } else {
+                    binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryShadow.visibility = View.VISIBLE
+                    binding.bottomSheetGalleryImage.groupBottomSheetImageGalleryExpanseSendBox.visibility = View.GONE
+                }
+            }
+        })
+
+        bottomSheetGalleryBehavior.peekHeight = requireContext().resources.displayMetrics.heightPixels * 2 / 5
 
         bottomSheetBinding.viewModel = viewModel
 
@@ -196,11 +226,34 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
             layoutManager = GridLayoutManager(requireContext(), 3)
             addItemDecoration(
                 MarginItemDecorationGridLayout(
-                    1 * requireContext().resources.displayMetrics.density.toInt(),
+                    1.dpToPx(requireContext()),
                     3
                 )
             )
         }
+
+        bottomSheetBinding.imageButtonBottomSheetImageGalleryCollapseBottomSheet.setOnClickListener {
+            hideBottomSheetGallery()
+        }
+
+        bottomSheetBinding.imageButtonBottomSheetImageGallerySend.setOnClickListener {
+            if (viewModel.listGalleryImageUIModel.value?.isNotEmpty() == true) {
+                viewModel.sendImg(viewModel.selectedGalleryImage.value?.toList() ?: listOf(" "))
+                hideBottomSheetGallery()
+            }
+        }
+
+        viewModel.initListGalleryImageUIModel(getAllGalleryImage())
+    }
+
+    private fun hideBottomSheetGallery() {
+        bottomSheetGalleryBehavior.isHideable = true
+        bottomSheetGalleryBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    private fun showBottomSheetGallery() {
+        bottomSheetGalleryBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetGalleryBehavior.isHideable = false
         viewModel.initListGalleryImageUIModel(getAllGalleryImage())
     }
 

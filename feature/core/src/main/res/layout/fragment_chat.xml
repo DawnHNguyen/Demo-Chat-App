@@ -170,5 +170,17 @@
             app:layout_constraintStart_toEndOf="@id/imageButton_chat_gallery"
             app:layout_constraintTop_toTopOf="@id/view_chat_typeMessage" />
 
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/parentView_chat_bottomSheetGallery"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/bottomSheet_galleryImage"
+                layout="@layout/bottom_sheet_gallery_image"/>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

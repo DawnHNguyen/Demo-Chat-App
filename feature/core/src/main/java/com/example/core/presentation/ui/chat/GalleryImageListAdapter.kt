@@ -1,12 +1,7 @@
 package com.example.core.presentation.ui.chat
 
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,9 +9,13 @@ import com.bumptech.glide.Glide
 import com.example.core.R
 import com.example.core.databinding.ItemGalleryImageBinding
 
-class GalleryImageListAdapter(private val onClickGalleryImage: OnClickGalleryImageRecyclerView) : ListAdapter<GalleryImageUIModel, GalleryImageListAdapter.GalleryImageListViewHolder>(GalleryImageListDiffUtil()) {
+class GalleryImageListAdapter(private val onClickGalleryImage: OnClickGalleryImageRecyclerView) :
+    ListAdapter<GalleryImageUIModel, GalleryImageListAdapter.GalleryImageListViewHolder>(
+        GalleryImageListDiffUtil()
+    ) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryImageListViewHolder = GalleryImageListViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryImageListViewHolder =
+        GalleryImageListViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: GalleryImageListViewHolder, position: Int) {
         val galleryImageUIModel = getItem(position)
@@ -25,19 +24,17 @@ class GalleryImageListAdapter(private val onClickGalleryImage: OnClickGalleryIma
 
     class GalleryImageListViewHolder private constructor(private val binding: ItemGalleryImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(galleryImageUIModel: GalleryImageUIModel, itemListener: OnClickGalleryImageRecyclerView) {
+        fun bind(
+            galleryImageUIModel: GalleryImageUIModel,
+            itemListener: OnClickGalleryImageRecyclerView
+        ) {
             binding.imageViewItemGalleryImage.apply {
                 Glide
                     .with(this.context)
                     .load(galleryImageUIModel.image)
                     .placeholder(R.drawable.avatar)
                     .into(this)
-
-                imageTintMode =  PorterDuff.Mode.SRC_ATOP
-                imageTintList = if (galleryImageUIModel.selected) ColorStateList.valueOf(Color.parseColor("#80000000")) else null
             }
-
-//            binding.viewItemGalleryImageShadowSelectedImage.visibility = if (galleryImageUIModel.selected) View.VISIBLE else View.GONE
 
             binding.checkboxItemDeleteRoom.isChecked = galleryImageUIModel.selected
 

@@ -21,6 +21,9 @@ class ChatViewModel : ViewModel() {
     private val _listGalleryImageUIModel = MutableLiveData<List<GalleryImageUIModel>>(listOf())
     val listGalleryImageUIModel: LiveData<List<GalleryImageUIModel>> get() = _listGalleryImageUIModel
 
+    private val _selectedGalleryImage = MutableLiveData<MutableList<String>>(mutableListOf())
+    val selectedGalleryImage: LiveData<MutableList<String>> get() = _selectedGalleryImage
+
     fun sendMsg() {
         if (!chatMessage.value.isNullOrEmpty()) {
             val temp = listMessage.value?.toMutableList()
@@ -56,6 +59,12 @@ class ChatViewModel : ViewModel() {
     }
 
     fun onClickGalleryImage(position: Int){
-        _listGalleryImageUIModel.value?.get(position)?.selected = !(listGalleryImageUIModel.value?.get(position)?.selected ?: false)
+        if (listGalleryImageUIModel.value?.get(position)?.selected == true){
+            _listGalleryImageUIModel.value?.get(position)?.selected = false
+            _selectedGalleryImage.value?.remove(_listGalleryImageUIModel.value?.get(position)?.image ?: " ")
+        } else {
+            _listGalleryImageUIModel.value?.get(position)?.selected = true
+            _selectedGalleryImage.value?.add(_listGalleryImageUIModel.value?.get(position)?.image ?: " ")
+        }
     }
 }
