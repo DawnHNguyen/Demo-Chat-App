@@ -21,8 +21,8 @@ class ChatViewModel : ViewModel() {
     private val _listGalleryImageUIModel = MutableLiveData<List<GalleryImageUIModel>>(listOf())
     val listGalleryImageUIModel: LiveData<List<GalleryImageUIModel>> get() = _listGalleryImageUIModel
 
-    private val _selectedGalleryImage = MutableLiveData<MutableList<String>>(mutableListOf())
-    val selectedGalleryImage: LiveData<MutableList<String>> get() = _selectedGalleryImage
+    private val _selectedGalleryImage = MutableLiveData<List<String>>(mutableListOf())
+    val selectedGalleryImage: LiveData<List<String>> get() = _selectedGalleryImage
 
     fun sendMsg() {
         if (!chatMessage.value.isNullOrEmpty()) {
@@ -48,9 +48,10 @@ class ChatViewModel : ViewModel() {
         if (img.size > 1) temp?.add(ImageMessage(img).apply { setMsgType(MessageType.SendMultiImg) })
         else temp?.add(ImageMessage(img).apply { setMsgType(MessageType.SendImg) })
         _listMessage.value = temp?.toList()
+        _selectedGalleryImage.value = listOf()
     }
 
-    fun initListGalleryImageUIModel(listImage: List<String>){
+    fun initListGalleryImageUIModel(listImage: List<String>) {
         val listUiModel = mutableListOf<GalleryImageUIModel>()
         listImage.forEach {
             listUiModel.add(GalleryImageUIModel(it, false))
@@ -58,13 +59,15 @@ class ChatViewModel : ViewModel() {
         _listGalleryImageUIModel.value = listUiModel.toList()
     }
 
-    fun onClickGalleryImage(position: Int){
-        if (listGalleryImageUIModel.value?.get(position)?.selected == true){
+    fun onClickGalleryImage(position: Int) {
+        val temp = _selectedGalleryImage.value?.toMutableList()
+        if (listGalleryImageUIModel.value?.get(position)?.selected == true) {
             _listGalleryImageUIModel.value?.get(position)?.selected = false
-            _selectedGalleryImage.value?.remove(_listGalleryImageUIModel.value?.get(position)?.image ?: " ")
+            temp?.remove(_listGalleryImageUIModel.value?.get(position)?.image ?: " ")
         } else {
             _listGalleryImageUIModel.value?.get(position)?.selected = true
-            _selectedGalleryImage.value?.add(_listGalleryImageUIModel.value?.get(position)?.image ?: " ")
+            temp?.add(_listGalleryImageUIModel.value?.get(position)?.image ?: " ")
         }
+        _selectedGalleryImage.value = temp?.toList()
     }
 }

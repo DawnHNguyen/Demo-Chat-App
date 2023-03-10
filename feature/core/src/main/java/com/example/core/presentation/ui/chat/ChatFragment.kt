@@ -6,20 +6,20 @@ import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.setMargins
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -103,10 +103,25 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
 
         binding.chatParentView.setOnClickListener { hideKeyboard() }
 
+        val tv = TypedValue()
+        val actionBarHeight =
+            if (requireContext().theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+            } else 0
+
+        val param = binding.toolBarChatFragment.layoutParams as ViewGroup.MarginLayoutParams
+
+        param.height = actionBarHeight * 3 / 2
+
+        binding.toolBarChatFragment.layoutParams = param
+
+        binding.toolBarChatFragment.setPadding(0, actionBarHeight / 2, 0, 0)
+
+        requireActivity().window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+
         bottomSheetGalleryBehavior =
             BottomSheetBehavior.from(binding.bottomSheetGalleryImage.parentViewBottomSheetGalleryImage)
-
-        bottomSheetGalleryBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         setupBottomSheetGallery()
 
@@ -121,10 +136,14 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
 
         binding.imageButtonChatSend.setOnClickListener {
             viewModel.sendMsg()
+            viewModel.selectedGalleryImage.value?.apply {
+                if (this.isNotEmpty()) {
+                    viewModel.sendImg(this)
+                    hideBottomSheetGallery()
+                }
+            }
             hideKeyboard()
         }
-
-        requireActivity().window.statusBarColor = Color.parseColor("#DB5BC1D0")
 
         activity?.findViewById<AppBarLayout>(R.id.topAppBar_mainActivity)?.visibility = View.GONE
 
@@ -144,21 +163,24 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
             checkPermission { showBottomSheetGallery() }
         }
 
-        viewModel.selectedGalleryImage.observe(viewLifecycleOwner){
-            Log.d("Chat", "outIf")
-//            if (bottomSheetGalleryBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                if (it.isNotEmpty()) {
-                    Log.d("Chat", "inIf")
-                    binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.text = it.size.toString()
-                    binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.visibility = View.VISIBLE
-                    binding.bottomSheetGalleryImage.imageButtonBottomSheetImageGalleryExpanseSend.isEnabled = true
-                }
-                else {
-                    Log.d("Chat", "inElse")
-                    binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.visibility = View.GONE
-                    binding.bottomSheetGalleryImage.imageButtonBottomSheetImageGalleryExpanseSend.isEnabled = false
-                }
-//            }
+        viewModel.selectedGalleryImage.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.text =
+                    it.size.toString()
+                binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.visibility =
+                    View.VISIBLE
+                binding.bottomSheetGalleryImage.imageButtonBottomSheetImageGalleryExpanseSend.isEnabled =
+                    true
+            } else {
+                binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.visibility =
+                    View.GONE
+                binding.bottomSheetGalleryImage.imageButtonBottomSheetImageGalleryExpanseSend.isEnabled =
+                    false
+            }
+        }
+
+        binding.imageButtonChatCollapseGalleryBottomSheet.setOnClickListener {
+            hideBottomSheetGallery()
         }
 
         binding.recyclerViewChat.apply {
@@ -178,8 +200,6 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
 
         activity?.findViewById<BottomNavigationView>(R.id.bottomNav_activityMain_bottomNav)?.visibility =
             View.VISIBLE
-
-        requireActivity().window.statusBarColor = Color.TRANSPARENT
     }
 
     private fun takePhoto() {
@@ -188,9 +208,20 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
     }
 
     private fun setupBottomSheetGallery() {
+        bottomSheetGalleryBehavior.apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
         val bottomSheetBinding = binding.bottomSheetGalleryImage
 
-        val heightChatBox = binding.bottomSheetGalleryImage.viewBottomSheetImageGallerySendBox.layoutParams.height
+        binding.parentViewChatBottomSheetGallery.minimumHeight =
+            requireContext().resources.displayMetrics.heightPixels
+
+        val tv = TypedValue()
+        val actionBarHeight =
+            if (requireContext().theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+            } else 0
 
         bottomSheetGalleryBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -199,21 +230,43 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 val slideOff = if (slideOffset < 0) 0f else slideOffset
-                val paramChatBox = binding.bottomSheetGalleryImage.viewBottomSheetImageGallerySendBox.layoutParams
-                paramChatBox.height = (heightChatBox * (1 - slideOff)).toInt().inc()
-                binding.bottomSheetGalleryImage.viewBottomSheetImageGallerySendBox.layoutParams = paramChatBox
+
+                val paramHeader =
+                    binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryExpanseHeader.layoutParams
+                paramHeader.height = (actionBarHeight * 3 / 2 * slideOff).toInt().inc()
+                binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryExpanseHeader.layoutParams =
+                    paramHeader
+
+                val paramIndicator =
+                    binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryIndicator.layoutParams
+                paramIndicator.height = (20.dpToPx(requireContext()) * (1 - slideOff)).toInt().inc()
+                binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryIndicator.layoutParams =
+                    paramIndicator
 
                 if (slideOff == 1f) {
-                    binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryShadow.visibility = View.GONE
-                    binding.bottomSheetGalleryImage.groupBottomSheetImageGalleryExpanseSendBox.visibility = View.VISIBLE
+                    binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryIndicator.visibility =
+                        View.GONE
+                    binding.bottomSheetGalleryImage.groupBottomSheetImageGalleryExpanseSendBox.visibility =
+                        View.VISIBLE
+                    if (viewModel.selectedGalleryImage.value.isNullOrEmpty())
+                        binding.bottomSheetGalleryImage.textViewBottomSheetImageGalleryImageCount.visibility =
+                            View.GONE
                 } else {
-                    binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryShadow.visibility = View.VISIBLE
-                    binding.bottomSheetGalleryImage.groupBottomSheetImageGalleryExpanseSendBox.visibility = View.GONE
+                    binding.bottomSheetGalleryImage.viewBottomSheetImageGalleryIndicator.visibility =
+                        View.VISIBLE
+                    binding.bottomSheetGalleryImage.groupBottomSheetImageGalleryExpanseSendBox.visibility =
+                        View.GONE
                 }
+
+                if (slideOff == 0f) binding.bottomSheetGalleryImage.groupBottomSheetImageGalleryHeader.visibility =
+                    View.GONE
+                else binding.bottomSheetGalleryImage.groupBottomSheetImageGalleryHeader.visibility =
+                    View.VISIBLE
             }
         })
 
-        bottomSheetGalleryBehavior.peekHeight = requireContext().resources.displayMetrics.heightPixels * 2 / 5
+        bottomSheetGalleryBehavior.peekHeight =
+            requireContext().resources.displayMetrics.heightPixels * 2 / 5
 
         bottomSheetBinding.viewModel = viewModel
 
@@ -232,11 +285,11 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
             )
         }
 
-        bottomSheetBinding.imageButtonBottomSheetImageGalleryCollapseBottomSheet.setOnClickListener {
+        bottomSheetBinding.imageButtonBottomSheetImageGalleryExpanseHeaderClose.setOnClickListener {
             hideBottomSheetGallery()
         }
 
-        bottomSheetBinding.imageButtonBottomSheetImageGallerySend.setOnClickListener {
+        bottomSheetBinding.imageButtonBottomSheetImageGalleryExpanseSend.setOnClickListener {
             if (viewModel.listGalleryImageUIModel.value?.isNotEmpty() == true) {
                 viewModel.sendImg(viewModel.selectedGalleryImage.value?.toList() ?: listOf(" "))
                 hideBottomSheetGallery()
@@ -249,11 +302,19 @@ class ChatFragment : BaseFragmentWithViewModel<FragmentChatBinding, ChatViewMode
     private fun hideBottomSheetGallery() {
         bottomSheetGalleryBehavior.isHideable = true
         bottomSheetGalleryBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        val param = binding.viewChatChatBox.layoutParams as ViewGroup.MarginLayoutParams
+        param.setMargins(0)
+        binding.groupChatChatBoxNotOpenGallery.visibility = View.VISIBLE
+        binding.imageButtonChatCollapseGalleryBottomSheet.visibility = View.GONE
     }
 
     private fun showBottomSheetGallery() {
         bottomSheetGalleryBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetGalleryBehavior.isHideable = false
+        val param = binding.viewChatChatBox.layoutParams as ViewGroup.MarginLayoutParams
+        param.setMargins(0, 0, 0, requireContext().resources.displayMetrics.heightPixels * 2 / 5)
+        binding.groupChatChatBoxNotOpenGallery.visibility = View.GONE
+        binding.imageButtonChatCollapseGalleryBottomSheet.visibility = View.VISIBLE
         viewModel.initListGalleryImageUIModel(getAllGalleryImage())
     }
 
