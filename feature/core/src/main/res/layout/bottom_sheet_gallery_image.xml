@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/parentView_bottomSheet_galleryImage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -73,12 +73,14 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_galleryImage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="0dp"
             app:galleryImage="@{viewModel.listGalleryImageUIModel}"
             android:paddingBottom="88dp"
             android:clipToPadding="false"
-            app:layout_constraintTop_toBottomOf="@id/view_bottomSheetImageGallery_expanseHeader"/>
+            android:background="@color/white"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintTop_toBottomOf="@id/view_bottomSheetImageGallery_expanseHeader"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_bottomSheetImageGallery_expanseSendBox"

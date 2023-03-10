@@ -37,7 +37,8 @@
             android:background="#DB5BC1D0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/top_bar_chat_menu">
+            app:menu="@menu/top_bar_chat_menu"
+            app:buttonGravity="center_vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/imageButton_chat_navBack"
