@@ -30,44 +30,74 @@
             app:layout_constraintTop_toTopOf="parent"
             app:messageChat="@{viewModel.listMessage}" />
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <View
             android:id="@+id/toolBar_chatFragment"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#DB5BC1D0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/top_bar_chat_menu"
-            app:buttonGravity="center_vertical">
+            app:layout_constraintTop_toTopOf="parent"/>
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/imageButton_chat_navBack"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:paddingStart="12dp"
-                android:paddingEnd="15dp"
-                android:src="@drawable/ic_nav_back" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/imageButton_chat_navBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingHorizontal="12dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_nav_back"
+            app:layout_constraintStart_toStartOf="@id/toolBar_chatFragment"
+            app:layout_constraintTop_toTopOf="@id/imageView_chat_avatar"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_chat_avatar"/>
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imageView_chat_avatar"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="12dp"
-                android:src="@drawable/avatar"
-                app:shapeAppearanceOverlay="@style/RoundedImageViewAvatar" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageView_chat_avatar"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="6dp"
+            android:src="@drawable/avatar"
+            app:shapeAppearanceOverlay="@style/RoundedImageViewAvatar"
+            app:layout_constraintStart_toEndOf="@id/imageButton_chat_navBack"
+            app:layout_constraintBottom_toBottomOf="@id/toolBar_chatFragment"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textView_chat_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:singleLine="true"
-                android:text="Dr.Thân Mạnh Hùng"
-                android:textColor="@color/white"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-        </com.google.android.material.appbar.MaterialToolbar>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_chat_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:singleLine="true"
+            android:text="Dr.Thân Mạnh Hùng"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/imageView_chat_avatar"
+            app:layout_constraintEnd_toStartOf="@id/imageButton_chat_voiceCall"
+            app:layout_constraintTop_toTopOf="@id/imageView_chat_avatar"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_chat_avatar"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/imageButton_chat_videoCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingHorizontal="8dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_video_call"
+            app:layout_constraintEnd_toEndOf="@id/toolBar_chatFragment"
+            app:layout_constraintTop_toTopOf="@id/imageView_chat_avatar"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_chat_avatar"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/imageButton_chat_voiceCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingHorizontal="7dp"
+            android:src="@drawable/ic_voice_call"
+            app:layout_constraintEnd_toStartOf="@id/imageButton_chat_videoCall"
+            app:layout_constraintTop_toTopOf="@id/imageView_chat_avatar"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_chat_avatar"/>
+
 
         <View
             android:layout_width="match_parent"

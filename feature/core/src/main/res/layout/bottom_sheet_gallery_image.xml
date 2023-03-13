@@ -47,10 +47,10 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:src="@drawable/ic_close"
-            android:padding="10dp"
+            android:padding="17dp"
             app:layout_constraintStart_toStartOf="@id/view_bottomSheetImageGallery_expanseHeader"
-            app:layout_constraintTop_toTopOf="@id/view_bottomSheetImageGallery_expanseHeader"
-            app:layout_constraintBottom_toBottomOf="@id/view_bottomSheetImageGallery_expanseHeader"/>
+            app:layout_constraintTop_toTopOf="@id/textView_bottomSheetImageGallery_expanseHeader_title"
+            app:layout_constraintBottom_toBottomOf="@id/textView_bottomSheetImageGallery_expanseHeader_title"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_bottomSheetImageGallery_expanseHeader_title"
@@ -59,9 +59,9 @@
             android:text="Hình Ảnh"
             android:textSize="18sp"
             android:textColor="@color/white"
+            android:layout_marginBottom="13dp"
             app:layout_constraintStart_toStartOf="@id/view_bottomSheetImageGallery_expanseHeader"
             app:layout_constraintEnd_toEndOf="@id/view_bottomSheetImageGallery_expanseHeader"
-            app:layout_constraintTop_toTopOf="@id/view_bottomSheetImageGallery_expanseHeader"
             app:layout_constraintBottom_toBottomOf="@id/view_bottomSheetImageGallery_expanseHeader"/>
 
         <androidx.constraintlayout.widget.Group
