@@ -72,6 +72,9 @@ dependencies {
     implementation AndroidLibraries.hawk
 
     implementation AndroidLibraries.glide
+
+    implementation AndroidLibraries.googleSSO
+    implementation AndroidLibraries.facebookSSO
 }
 
 // Allow references to generated code

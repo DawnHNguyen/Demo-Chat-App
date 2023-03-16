@@ -18,7 +18,9 @@ object Versions {
     const val viewPager2 = "1.0.0"
     const val activity = "1.5.1"
     const val fragment = "1.5.2"
-    const val playService = "21.0.1"
+    const val playServiceLocation = "21.0.1"
+    const val playServiceGGSignIn = "20.4.1"
+    const val facebookLogin = "latest.release"
 
     const val appCompat = "1.5.0"
     const val coreKtx = "1.5.0-alpha01"
@@ -110,7 +112,11 @@ object AndroidLibraries {
     const val rxAndroid = "io.reactivex.rxjava2:rxandroid:${Versions.rxAndroid}"
 
     //Play Service
-    const val gmsPlayService = "com.google.android.gms:play-services-location:${Versions.playService}"
+    const val gmsPlayService = "com.google.android.gms:play-services-location:${Versions.playServiceLocation}"
+    const val googleSSO = "com.google.android.gms:play-services-auth:${Versions.playServiceGGSignIn}"
+
+    //Facebook SSO
+    const val facebookSSO = "com.facebook.android:facebook-login:${Versions.facebookLogin}"
 
     // ANDROID
     const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
