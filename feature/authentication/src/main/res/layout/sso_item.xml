@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.graphics.drawable.Drawable"/>
+        <variable
+            name="platformLogo"
+            type="Drawable" />
+
+        <variable
+            name="platformName"
+            type="String" />
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp"
+        android:paddingVertical="5dp"
+        android:background="@drawable/background_login_sso_item"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView_ssoItem_platformLogo"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@{platformLogo}"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_ssoItem_platformName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{@string/login_registerTextButton(platformName)}"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginStart="15.5dp"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

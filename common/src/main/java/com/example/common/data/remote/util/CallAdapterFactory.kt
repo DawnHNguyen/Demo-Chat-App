@@ -69,13 +69,13 @@ class CallAdapterFactory private constructor() : CallAdapter.Factory() {
                 override fun onFailure(call: Call<S>, t: Throwable) {
                     val apiResponse = when (t) {
                         is IOException, is SSLHandshakeException -> Resource.error(
-                            NoNetworkException(null, "No network connection"),
+                            NoNetworkException("No network connection"),
                             null
                         )
                         //SSLHandshakeException is thrown when user's internet connection is disconnected
                         //before the server can return response
                         else -> {
-                            Resource.error(UnknownException(null, "Unknown exception"), null)
+                            Resource.error(UnknownException("Unknown exception"), null)
                         }
                     }
                     callback.onResponse(this@ResourceCall, Response.success(apiResponse))
@@ -94,19 +94,19 @@ class CallAdapterFactory private constructor() : CallAdapter.Factory() {
                         ))
                     } else {
                         val gson = Gson()
-                        val error: Error? = try {
-                            gson.fromJson(errorBody, BaseErrorResponse::class.java).errors[0]
+                        val error: BaseErrorResponse? = try {
+                            gson.fromJson(errorBody, BaseErrorResponse::class.java)
                         } catch (e: Exception) {
                             null
                         }
                         val exception = when (code) {
-                            400 -> BadRequestException(error)
-                            401, 403 -> NetworkAuthenticationException(error)
-                            404 -> NetworkResourceNotFoundException(error)
-                            408 -> RequestTimeoutException(error)
-                            500 -> NetworkServerException(error)
-                            in 400..499 -> UnknownException(error, null)
-                            else -> NetworkException(error)
+                            400 -> BadRequestException(error?.msg)
+                            401, 403 -> NetworkAuthenticationException(error?.msg)
+                            404 -> NetworkResourceNotFoundException(error?.msg)
+                            408 -> RequestTimeoutException(error?.msg)
+                            500 -> NetworkServerException(error?.msg)
+                            in 400..499 -> UnknownException(error?.msg)
+                            else -> NetworkException(error?.msg)
                         }
 
                         callback.onResponse(this@ResourceCall, Response.success(

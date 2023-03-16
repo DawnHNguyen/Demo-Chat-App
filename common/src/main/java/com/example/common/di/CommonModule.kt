@@ -3,8 +3,6 @@ package com.example.common.di
 import com.google.gson.Gson
 import com.example.common.AppDispatchers
 import com.example.common.BuildConfig
-import com.example.common.data.remote.services.CommonService
-import com.example.common.data.remote.util.CallAdapterFactory
 import com.example.common.data.remote.util.HeaderAuthorizationInterceptor
 import dagger.Module
 import dagger.Provides
@@ -14,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -59,14 +58,8 @@ object CommonModule {
             .client(client)
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(CallAdapterFactory())
+//            .addCallAdapterFactory(CallAdapterFactory())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
-
-    @Singleton
-    @Provides
-    fun providesCommonService(retrofit: Retrofit): CommonService {
-        return retrofit.create(CommonService::class.java)
-    }
-
 }

@@ -85,6 +85,7 @@ dependencies {
     implementation project(Modules.navigation)
     implementation project(Modules.common)
     implementation project(Modules.core)
+    implementation project(Modules.authentication)
 
 
     implementation Libraries.Timber

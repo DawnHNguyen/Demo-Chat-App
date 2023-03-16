@@ -19,7 +19,6 @@ class AsteriskPasswordTransformationMethod : PasswordTransformationMethod() {
         override fun subSequence(startIndex: Int, endIndex: Int): CharSequence {
             return source.subSequence(startIndex, endIndex)
         }
-        
     }
     
 }

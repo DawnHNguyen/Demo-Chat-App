@@ -51,7 +51,9 @@ object Versions {
 
     const val gson = "2.8.6"
     const val retrofit = "2.9.0"
-    const val loggingIntercepter = "4.10.0"
+    const val loggingInterceptor = "4.10.0"
+    const val rxJava = "2.2.16"
+    const val rxAndroid = "2.1.1"
 
     const val hawk = "2.0.1"
 
@@ -103,6 +105,10 @@ object AndroidLibraries {
     //Coroutine
     const val kotlinCoroutineAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
 
+    //RxJava
+    const val rxJava = "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"
+    const val rxAndroid = "io.reactivex.rxjava2:rxandroid:${Versions.rxAndroid}"
+
     //Play Service
     const val gmsPlayService = "com.google.android.gms:play-services-location:${Versions.playService}"
 
@@ -136,9 +142,10 @@ object AndroidLibraries {
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val retrofitConverter = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
+    const val retrofitRxJavaAdapter = "com.squareup.retrofit2:adapter-rxjava2:${Versions.retrofit}"
 
     //OKHTTP3
-    const val loggingIntercepter = "com.squareup.okhttp3:logging-interceptor:${Versions.loggingIntercepter}"
+    const val loggingIntercepter = "com.squareup.okhttp3:logging-interceptor:${Versions.loggingInterceptor}"
 
     //Hawk
     const val hawk = "com.orhanobut:hawk:${Versions.hawk}"
@@ -154,6 +161,8 @@ object Modules {
     const val common = ":common"
 
     const val core = ":feature:core"
+
+    const val authentication = ":feature:authentication"
 
 }
 

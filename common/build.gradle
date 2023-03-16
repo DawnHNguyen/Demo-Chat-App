@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"Your dev api endpoint\"")
+            buildConfigField("String", "BASE_URL", "\"http://hsba-v2.beetechdev.vn:1680/api/v1/\"")
         }
 
         release {
@@ -58,6 +58,10 @@ dependencies {
     implementation AndroidLibraries.retrofitConverter
     implementation AndroidLibraries.gson
     implementation AndroidLibraries.loggingIntercepter
+    implementation AndroidLibraries.retrofitRxJavaAdapter
+
+    implementation AndroidLibraries.rxJava
+    implementation AndroidLibraries.rxAndroid
 
     implementation AndroidLibraries.hawk
 }

@@ -1,6 +1,6 @@
 package com.example.common.data.remote.util
 
-data class Resource<out T>(val status: Status, val data: T?, val error: CustomException?) {
+data class Resource<out T>(val status: Status, val data: T?, val error: Exception?) {
     enum class Status {
         SUCCESS,
         ERROR,
@@ -16,7 +16,7 @@ data class Resource<out T>(val status: Status, val data: T?, val error: CustomEx
             )
         }
 
-        fun <T> error(error: CustomException, data: T? = null): Resource<T> {
+        fun <T> error(error: Exception, data: T? = null): Resource<T> {
             return Resource(
                 Status.ERROR,
                 data,

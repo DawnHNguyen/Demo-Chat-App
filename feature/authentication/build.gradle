@@ -1,0 +1,80 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk SdkVersions.compileSdkVersion
+
+    defaultConfig {
+        minSdk SdkVersions.minSdkVersion
+        targetSdk SdkVersions.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility SdkVersions.javaVersion
+        targetCompatibility SdkVersions.javaVersion
+    }
+    kotlinOptions {
+        jvmTarget = SdkVersions.jvmTarget
+    }
+    buildFeatures {
+        dataBinding true
+    }
+}
+
+
+dependencies {
+
+    implementation AndroidLibraries.coreKtx
+    implementation AndroidLibraries.appCompat
+    implementation AndroidLibraries.material
+    implementation AndroidLibraries.constraintLayout
+
+    testImplementation TestLibraries.junit
+    androidTestImplementation TestLibraries.ext
+    androidTestImplementation TestLibraries.espresso
+
+    implementation AndroidLibraries.navigationFrag
+    implementation AndroidLibraries.navigation
+
+    implementation project(Modules.common)
+    implementation project(Modules.navigation)
+
+    implementation Libraries.Timber
+
+    implementation Libraries.daggerHilt
+    kapt Libraries.hiltCompiler
+
+    implementation AndroidLibraries.lifecycleViewModel
+
+    implementation AndroidLibraries.retrofit
+    implementation AndroidLibraries.retrofitConverter
+    implementation AndroidLibraries.gson
+    implementation AndroidLibraries.loggingIntercepter
+    implementation AndroidLibraries.retrofitRxJavaAdapter
+
+    implementation AndroidLibraries.rxJava
+    implementation AndroidLibraries.rxAndroid
+
+    implementation AndroidLibraries.hawk
+
+    implementation AndroidLibraries.glide
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
+}
