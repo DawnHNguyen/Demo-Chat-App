@@ -13,14 +13,6 @@ ext.versionMinor = 0
 ext.versionPatch = 1
 
 android {
-    signingConfigs {
-        debug {
-
-        }
-        release {
-
-        }
-    }
     compileSdk SdkVersions.compileSdkVersion
 
     defaultConfig {
@@ -30,7 +22,6 @@ android {
 
         versionCode 1
         versionName "$versionMajor.$versionMinor.$versionPatch"
-        signingConfig signingConfigs.debug
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,7 +31,6 @@ android {
         debug {
             applicationIdSuffix ".debug"
             resValue "string", "app_name", "Training Beetech dbg"
-            signingConfig signingConfigs.debug
         }
 
         release {
@@ -51,7 +41,6 @@ android {
                 removeUnusedResources true
                 proguardFiles 'proguard-rules.pro'
             }
-//            signingConfig signingConfigs.release
         }
     }
     compileOptions {
