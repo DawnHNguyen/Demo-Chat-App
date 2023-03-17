@@ -83,7 +83,7 @@
             android:layout_height="43dp"
             android:layout_marginStart="1dp"
             android:background="@drawable/background_login_edittext_drawablestart"
-            android:paddingHorizontal="13dp"
+            android:paddingVertical="12.5dp"
             android:src="@drawable/ic_password_login"
             app:layout_constraintBottom_toBottomOf="@id/editText_login_password"
             app:layout_constraintStart_toStartOf="@id/editText_login_password"

@@ -23,7 +23,7 @@ class AuthenticationRepositoryImpl @Inject constructor(private val dataSource: A
         var loginResponse: Resource<LoginResponse> = Resource.error(UnknownException("Unknown exception"), null)
 //        val compositeDisposable = CompositeDisposable()
         compositeDisposable.add(
-            dataSource.login(2, "2.0.0", loginRequest)
+            dataSource.login(loginRequest)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ response ->

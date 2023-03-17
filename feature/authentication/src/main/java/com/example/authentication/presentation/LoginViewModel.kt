@@ -35,7 +35,7 @@ class LoginViewModel @Inject constructor(
 //        _loginStateFlow.value = loginUseCase("demo1@example.com", "Abcd!234", compositeDisposable)
         val loginRequest = LoginRequest(2, "asdadadsadaa", "Abcd!234", "demo1@example.com")
         compositeDisposable.add(
-            dataSource.login(2, "2.0.0", loginRequest)
+            dataSource.login(loginRequest)
                 .delay(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -47,6 +47,7 @@ class LoginViewModel @Inject constructor(
                 },
                     { t ->
                         Log.e("LoginResponse", t.toString())
+                        _loginStateFlow.value = Resource.error(UnknownException(t.toString()))
                     })
         )
     }

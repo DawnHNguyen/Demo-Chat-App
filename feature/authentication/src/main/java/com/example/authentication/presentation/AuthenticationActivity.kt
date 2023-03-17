@@ -1,6 +1,5 @@
 package com.example.authentication.presentation
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -58,8 +57,7 @@ class AuthenticationActivity : AppCompatActivity() {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.attributes.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
 
         super.onCreate(savedInstanceState)
@@ -67,18 +65,24 @@ class AuthenticationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         googleLoginForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.data != null) {
-                try {
-                    val acc = GoogleSignIn.getSignedInAccountFromIntent(it.data).getResult(ApiException::class.java)
-                    Toast.makeText(this, "Login with Google success", Toast.LENGTH_SHORT).show()
-                    Log.d("Login", "Login with Google success, ${acc.email}")
-                }
-                catch (e: ApiException) {
-                    Log.d("Login", "signInResult:failed code=" + e.statusCode)
-                    Toast.makeText(this, "Login with Google fail: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+                if (it.data != null) {
+                    try {
+                        val acc = GoogleSignIn.getSignedInAccountFromIntent(it.data).getResult(ApiException::class.java)
+                        Toast.makeText(
+                            this,
+                            "Login with Google success by account ${acc.email}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } catch (e: ApiException) {
+                        Log.d("Login", "signInResult:failed code=" + e.statusCode)
+                        Toast.makeText(
+                            this,
+                            "Login with Google fail: ${e.statusCode}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
-        }
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, binding.root).let {
@@ -95,7 +99,6 @@ class AuthenticationActivity : AppCompatActivity() {
         viewModel.loginStateFlow.observe(this) {
             when {
                 it.isSuccessful() -> {
-                    Log.d("Login", it.data?.data?.accessToken ?: "nothing here")
                     customDialog.cancel()
                     navigateToCoreActivity(this)
                     finish()
@@ -103,7 +106,7 @@ class AuthenticationActivity : AppCompatActivity() {
                 it.isError() -> {
                     Toast.makeText(
                         this,
-                        "oh no, it's an error: ${it.data?.msg}",
+                        "oh no, it's an error: ${it.data?.msg ?: it.error?.message ?: " "}",
                         Toast.LENGTH_SHORT
                     ).show()
                     customDialog.cancel()
@@ -121,15 +124,14 @@ class AuthenticationActivity : AppCompatActivity() {
         )
 
         binding.recyclerViewLoginSso.apply {
-            adapter = SSORecyclerViewAdapter(ssoData, object: OnClickSSO {
+            adapter = SSORecyclerViewAdapter(ssoData, object : OnClickSSO {
                 override fun loginSSO(type: SSOPlatform) {
-                    when(type){
+                    when (type) {
                         SSOPlatform.Google -> googleSignIn()
 
                         SSOPlatform.Facebook -> facebookSignIn()
 
                         else -> {
-                            Log.d("Login", "signout")
                             googleSignInClient.signOut()
                             googleSignInClient.revokeAccess()
                         }
@@ -210,12 +212,11 @@ class AuthenticationActivity : AppCompatActivity() {
         googleLoginForResult.launch(signInIntent)
     }
 
-    private fun facebookSignIn(){
-        LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile"))
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        callbackManager.onActivityResult(requestCode, resultCode, data)
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun facebookSignIn() {
+        LoginManager.getInstance().logInWithReadPermissions(
+                this,
+                callbackManager,
+                listOf("public_profile")
+            )
     }
 }
