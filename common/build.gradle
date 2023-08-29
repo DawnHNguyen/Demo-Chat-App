@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://hsba-v2.beetechdev.vn:1680/api/v1/\"")
+            buildConfigField("String", "BASE_URL", "\"Your debug api endpoint\"")
         }
 
         release {

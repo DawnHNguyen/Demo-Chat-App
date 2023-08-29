@@ -32,7 +32,6 @@ class GalleryImageListAdapter(private val onClickGalleryImage: OnClickGalleryIma
                 Glide
                     .with(this.context)
                     .load(galleryImageUIModel.image)
-                    .placeholder(R.drawable.avatar)
                     .into(this)
             }
 

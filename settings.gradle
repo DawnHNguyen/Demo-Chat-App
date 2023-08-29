@@ -12,7 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Training Beetech"
+rootProject.name = "Demo Chat App"
 include ':app'
 include ':common'
 include ':navigation'

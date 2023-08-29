@@ -19,7 +19,6 @@
             android:id="@+id/imageView_itemMessageReceive_avatar"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/avatar"
             app:shapeAppearanceOverlay="@style/RoundedImageViewAvatar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

@@ -55,7 +55,6 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginBottom="6dp"
-            android:src="@drawable/avatar"
             app:shapeAppearanceOverlay="@style/RoundedImageViewAvatar"
             app:layout_constraintStart_toEndOf="@id/imageButton_chat_navBack"
             app:layout_constraintBottom_toBottomOf="@id/toolBar_chatFragment"/>

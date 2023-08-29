@@ -1,4 +1,4 @@
-package com.example.trainingbeetech
+package com.example.training
 
 import android.app.Application
 import com.orhanobut.hawk.BuildConfig

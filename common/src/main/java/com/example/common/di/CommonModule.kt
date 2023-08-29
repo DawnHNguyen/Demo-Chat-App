@@ -22,7 +22,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object CommonModule {
-//    private const val BASE_URL = "Your api endpoint"
     private const val BASE_URL = BuildConfig.BASE_URL
 
     @Provides

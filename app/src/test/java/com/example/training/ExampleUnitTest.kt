@@ -1,4 +1,4 @@
-package com.example.trainingbeetech
+package com.example.training
 
 import org.junit.Test
 

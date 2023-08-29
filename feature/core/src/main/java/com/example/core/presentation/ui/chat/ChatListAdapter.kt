@@ -91,7 +91,6 @@ class ChatListAdapter(val avatarUrl: String = "") :
                     .with(this.context)
                     .load(avatarUrl)
                     .centerCrop()
-                    .placeholder(R.drawable.avatar)
                     .into(this)
             }
             binding.executePendingBindings()
@@ -128,7 +127,6 @@ class ChatListAdapter(val avatarUrl: String = "") :
                     .with(this.context)
                     .load(avatarUrl)
                     .centerCrop()
-                    .placeholder(R.drawable.avatar)
                     .into(this)
             }
             binding.executePendingBindings()
@@ -193,7 +191,6 @@ class ChatListAdapter(val avatarUrl: String = "") :
                     .with(this.context)
                     .load(avatarUrl)
                     .centerCrop()
-                    .placeholder(R.drawable.avatar)
                     .into(this)
             }
             binding.executePendingBindings()
